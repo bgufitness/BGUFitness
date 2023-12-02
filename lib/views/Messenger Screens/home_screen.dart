@@ -14,18 +14,13 @@ class MessengerScreen extends StatefulWidget {
 }
 
 class _MessengerScreenState extends State<MessengerScreen> {
-  // for storing all users
   List<ChatUser> _list = [];
-
-  // for storing search status
 
   @override
   void initState() {
     super.initState();
     APIs.getSelfInfo();
-    //for updating user active status according to lifecycle events
-    //resume -- active or online
-    //pause  -- inactive or offline
+
     SystemChannels.lifecycle.setMessageHandler((message) {
       if (APIs.auth.currentUser != null) {
         if (message.toString().contains('resume')) {
@@ -44,7 +39,6 @@ class _MessengerScreenState extends State<MessengerScreen> {
   Widget build(BuildContext context) {
     mq = MediaQuery.of(context).size;
     return GestureDetector(
-      //for hiding keyboard when a tap is detected on screen
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         //app bar
@@ -53,35 +47,28 @@ class _MessengerScreenState extends State<MessengerScreen> {
           centerTitle: true,
         ),
 
-        //floating button to add new user
 
-        //body
+
         body: StreamBuilder(
           stream: APIs.getMyUsersId(),
 
-          //get id of only known users
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
-              //if data is loading
               case ConnectionState.waiting:
               case ConnectionState.none:
                 return const Center(child: CircularProgressIndicator());
 
-              //if some or all data is loaded then show it
               case ConnectionState.active:
               case ConnectionState.done:
                 return StreamBuilder(
                   stream: APIs.getAllUsers(
                       snapshot.data?.docs.map((e) => e.id).toList() ?? []),
 
-                  //get only those user, who's ids are provided
                   builder: (context, snapshot) {
                     switch (snapshot.connectionState) {
                       //if data is loading
                       case ConnectionState.waiting:
                       case ConnectionState.none:
-                      // return const Center(
-                      //     child: CircularProgressIndicator());
 
                       //if some or all data is loaded then show it
                       case ConnectionState.active:
@@ -115,8 +102,6 @@ class _MessengerScreenState extends State<MessengerScreen> {
       ),
     );
   }
-
-  // for adding new chat user
 
 
 }
