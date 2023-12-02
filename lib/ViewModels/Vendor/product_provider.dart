@@ -183,38 +183,22 @@ deleteGym(String gymId) async {
         onError: (e) => print("Error updating document $e"),
       );
 }
-
-deleteSalon(String salonId) async {
-  var document = FirebaseFirestore.instance;
-  document.collection("Bridal Salon").doc(salonId).delete().then(
+deleteProduct(String productId) async {
+  var docRef = await FirebaseFirestore.instance.collection("Products").where('productId',isEqualTo: productId).get();
+  var docId = docRef.docs[0].id;
+  var document = await FirebaseFirestore.instance;
+  document.collection("Products").doc(docId).delete().then(
         (doc) => print("Document deleted"),
-        onError: (e) => print("Error updating document $e"),
-      );
+    onError: (e) => print("Error updating document $e"),
+  );
+}
+deleteNutritionist(String nutritionistId) async {
+  var docRef = await FirebaseFirestore.instance.collection("Nutritionists").where('nutritionistsId',isEqualTo: nutritionistId).get();
+  var docId = docRef.docs[0].id;
+  var document = await FirebaseFirestore.instance;
+  document.collection("Nutritionists").doc(docId).delete().then(
+        (doc) => print("Document deleted"),
+    onError: (e) => print("Error updating document $e"),
+  );
 }
 
-void updateVenueData({
-  required venueId,
-  required String venueLocation,
-  required String venueName,
-  required int venuePrice,
-  required String venueDescription,
-  required String venueAddress,
-  required double venueCapacity,
-  required double venueParking,
-  required String vendorNumber,
-  required Map<String, dynamic> menus,
-  required isPrivate,
-}) async {
-  await FirebaseFirestore.instance.collection("Venues").doc(venueId).update({
-    'venueLocation': venueLocation,
-    'venueName': venueName,
-    'venuePrice': venuePrice,
-    'venueDescription': venueDescription,
-    'venueAddress': venueAddress,
-    'venueCapacity': venueCapacity,
-    'venueParking': venueParking,
-    'vendorNumber': vendorNumber,
-    'menus': menus,
-    "isPrivate": isPrivate,
-  });
-}

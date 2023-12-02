@@ -40,14 +40,4 @@ class NutritionistProvider {
     });
   }
 }
-deleteNutritionist(String productId) async {
-  await FirebaseFirestore.instance
-      .collection("Dresses")
-      .where("productId", isEqualTo: productId)
-      .get()
-      .then((querySnapshot) {
-    querySnapshot.docs.forEach((doc) {
-      doc.reference.delete();
-    });
-  });
-}
+

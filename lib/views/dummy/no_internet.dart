@@ -1,5 +1,4 @@
 import 'package:bgmfitness/views/CustomerPages/customer_bottom_nav_bar.dart';
-import 'package:bgmfitness/views/dummy/customer_page.dart';
 import 'package:bgmfitness/views/dummy/no_internet_screen.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';

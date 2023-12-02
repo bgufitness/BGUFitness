@@ -298,9 +298,9 @@ class _SellerDirectoryPageState extends State<SellerDirectoryPage> {
                                       context: context,
                                       builder: (BuildContext context) =>
                                           AlertDialog(
-                                        title: const Text('Delete Salon'),
+                                        title: const Text('Delete Product'),
                                         content: const Text(
-                                            'Are you sure you want to delete this salon?'),
+                                            'Are you sure you want to delete this product?'),
                                         actions: <Widget>[
                                           TextButton(
                                             onPressed: () => Navigator.pop(
@@ -309,7 +309,7 @@ class _SellerDirectoryPageState extends State<SellerDirectoryPage> {
                                           ),
                                           TextButton(
                                             onPressed: () {
-                                              deleteSalon(data['productId']);
+                                              deleteProduct(data['productId']);
                                               Navigator.pop(context);
                                             },
                                             child: const Text('OK'),
