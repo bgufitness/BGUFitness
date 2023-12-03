@@ -128,6 +128,7 @@ class _VendorSignupPageState extends State<VendorSignupPage> {
   Widget buildCNIC() => TextFormField(
     keyboardType: TextInputType.number,
     decoration: kTextFieldDecoration.copyWith(
+      labelStyle: TextStyle(color: Colors.black),
         prefixIcon: Icon(Icons.badge),
         hintText: "Enter your CNIC Number", labelText: "CNIC"),
     validator: (value) {
@@ -144,6 +145,7 @@ class _VendorSignupPageState extends State<VendorSignupPage> {
   Widget buildNumber() => TextFormField(
     keyboardType: TextInputType.number,
     decoration: kTextFieldDecoration.copyWith(
+        labelStyle: TextStyle(color: Colors.black),
         prefixIcon: Icon(Icons.phone),
         hintText: "03xxxxxxxx", labelText: "Number"),
     validator: (value) {
@@ -159,6 +161,7 @@ class _VendorSignupPageState extends State<VendorSignupPage> {
   Widget buildBusinessName() => TextFormField(
     keyboardType: TextInputType.emailAddress,
     decoration: kTextFieldDecoration.copyWith(
+      labelStyle: TextStyle(color: Colors.black),
         prefixIcon: Icon(Icons.business_center),
         hintText: "Enter your Business Name", labelText: "Business Name"),
     validator: (value) {
@@ -174,6 +177,7 @@ class _VendorSignupPageState extends State<VendorSignupPage> {
 
   Widget buildAddress() => TextFormField(
     decoration: kTextFieldDecoration.copyWith(
+        labelStyle: TextStyle(color: Colors.black),
         prefixIcon: Icon(Icons.location_on),
         hintText: "Enter your Address", labelText: "Address"),
     validator: (value) {
