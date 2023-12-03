@@ -1,33 +1,26 @@
-import 'dart:io';
-import 'package:dotted_border/dotted_border.dart';
+import 'package:bgmfitness/ViewModels/Vendor/add_product_model.dart';
+import 'package:bgmfitness/ViewModels/Vendor/product_provider.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-
-import '../../ViewModels/Vendor/add_product_model.dart';
-import '../../ViewModels/Vendor/product_provider.dart';
 import '../../constants.dart';
 
-class AddProductPage extends StatefulWidget {
-  const AddProductPage({Key? key}) : super(key: key);
+class ProductEditPage extends StatefulWidget {
+  final productData;
+  const ProductEditPage({Key? key, required this.productData})
+      : super(key: key);
 
   @override
-  State<AddProductPage> createState() => _AddProductPageState();
+  State<ProductEditPage> createState() => _ProductEditPageState();
 }
 
-class _AddProductPageState extends State<AddProductPage> {
+class _ProductEditPageState extends State<ProductEditPage> {
   final formKey = GlobalKey<FormState>();
   TextEditingController controller = TextEditingController();
   ProductModel productModel = ProductModel();
 
-  List<String> listOfUrls = [];
-  File? image;
-  final imagePicker = ImagePicker();
-  bool isUploading = false;
-  String imageUrl = "";
-  String category = "Whey Protein";
+  late bool isPrivate = widget.productData["isPrivate"];
+  late String category = widget.productData["productCategory"];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,8 +30,6 @@ class _AddProductPageState extends State<AddProductPage> {
           key: formKey,
           child: Column(
             children: [
-              buildAddPhotos(),
-              buildDivider(),
               buildProductName(),
               buildProductDes(),
               buildAddress(),
@@ -62,62 +53,52 @@ class _AddProductPageState extends State<AddProductPage> {
 
   Padding buildSubmitButton() {
     return Padding(
-      padding:  EdgeInsets.symmetric(horizontal: 30.h,vertical: 30.h),
-      child: GestureDetector(
-        onTap: (){
-          {
-            if (listOfUrls.isEmpty) {
-              Fluttertoast.showToast(
-                msg: 'Please add images!',
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.grey,
-                fontSize: 15,
-              );
-            }
-            if (formKey.currentState!.validate() && listOfUrls.isNotEmpty) {
-              formKey.currentState!.save();
+      padding: const EdgeInsets.only(
+          top: 30.0, bottom: 10.0, left: 15.0, right: 15.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              if (formKey.currentState!.validate()) {
+                formKey.currentState!.save();
 
-              try {
-                AddProductProvider().addProductData(
-                    productImages: listOfUrls,
-                    productLocation: productModel.productAddress,
-                    productName: productModel.productName,
-                    productPrice: productModel.productPrice,
-                    productDescription: productModel.productDescription,
-                    productRating: 0,
-                    productFeedback: 0,
-                    productNumber: productModel.productNumber,
-                    productQuantity: productModel.availableQuantity,
-                    productSize: productModel.productSize,
-                    productCategory: category,
-                    productDelivery: productModel.productDelivery);
+                try {
+                  updateProductData(
+                      productId: widget.productData['productId'],
+                      productLocation: productModel.productAddress,
+                      productName: productModel.productName,
+                      productPrice: productModel.productPrice,
+                      productDescription: productModel.productDescription,
+                      productNumber: productModel.productNumber,
+                      productQuantity: productModel.availableQuantity,
+                      productSize: productModel.productSize,
+                      productCategory: category,
+                      productDelivery: productModel.productDelivery,
+                      isPrivate: isPrivate);
 
-                Navigator.pushNamedAndRemoveUntil(
-                    context, 'StreamPage', (route) => false);
-              } catch (error) {
-                Fluttertoast.showToast(
-                  msg: error.toString(),
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
-                  timeInSecForIosWeb: 1,
-                  backgroundColor: Colors.grey,
-                  fontSize: 15,
-                );
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, 'StreamPage', (route) => false);
+                } catch (error) {
+                  Fluttertoast.showToast(
+                    msg: error.toString(),
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.grey,
+                    fontSize: 15,
+                  );
+                }
               }
-            }
-          }
-        },
-        child: Container(
-          height: 45.h,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(22.5),
-            color: Colors.black,
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
+            child: const Text(
+              "Submit",
+              style: TextStyle(color: Colors.white),
+            ),
           ),
-          child: Center(child: Text("Submit",style: TextStyle(color: Colors.white,fontSize: 16),)),
-        ),
-      )
+        ],
+      ),
     );
   }
 
@@ -132,7 +113,7 @@ class _AddProductPageState extends State<AddProductPage> {
             child: const Icon(
               size: 25,
               color: Colors.white,
-              Icons.phone,
+              Icons.numbers,
             ),
           ),
           const SizedBox(
@@ -140,21 +121,18 @@ class _AddProductPageState extends State<AddProductPage> {
           ),
           Expanded(
             child: TextFormField(
-              style: TextStyle(color: Colors.black.withOpacity(0.6),fontWeight: FontWeight.w400),
-              decoration: InputDecoration(
-                labelText: "Phone Number",
-                labelStyle: TextStyle(color: Colors.black.withOpacity(0.6)),
-                hintText: "Enter Phone Number",
-                enabledBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black12),
-                ),
+              initialValue: widget.productData['sellerNumber'],
+              style: TextStyle(color: Colors.black.withOpacity(0.6)),
+              decoration: const InputDecoration(
+                labelText: "Mobile Number",
+                hintText: "Enter Mobile Number",
                 focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
+                  borderSide: BorderSide(color: kPurple),
                 ),
               ),
               validator: (value) {
                 if (value!.isEmpty || !RegExp(r"^\d{11}$").hasMatch(value)) {
-                  return "Enter Number eg: 0333";
+                  return "Enter Number eg: 0333xxx";
                 } else {
                   return null;
                 }
@@ -191,7 +169,7 @@ class _AddProductPageState extends State<AddProductPage> {
 
   Padding buildAddress() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+      padding:  EdgeInsets.symmetric(vertical: 5, horizontal: 15),
       child: Row(
         children: [
           CircleAvatar(
@@ -208,6 +186,7 @@ class _AddProductPageState extends State<AddProductPage> {
           ),
           Expanded(
             child: TextFormField(
+              initialValue: widget.productData["productAddress"],
               decoration:  InputDecoration(
                 hintStyle: TextStyle(
                     color: Colors.black.withOpacity(0.6),
@@ -239,163 +218,6 @@ class _AddProductPageState extends State<AddProductPage> {
     );
   }
 
-  Future getImage() async {
-    XFile? pickedFile =
-        await imagePicker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      if (pickedFile != null) {
-        image = File(pickedFile.path);
-        setState(() {
-          isUploading = true;
-          uploadFile().then((url) {
-            if (url != null) {
-              setState(() {
-                isUploading = false;
-              });
-            }
-          });
-        });
-      }
-    });
-  }
-
-  Future uploadFile() async {
-    File file = File(image!.path);
-
-    String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
-
-    Reference referenceRoot = FirebaseStorage.instance.ref();
-    Reference referenceDirImages = referenceRoot.child('images');
-    Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
-
-    try {
-      await referenceImageToUpload.putFile(file);
-      imageUrl = await referenceImageToUpload.getDownloadURL();
-
-      if (imageUrl != null) {
-        setState(() {
-          listOfUrls.add(imageUrl);
-        });
-      }
-    } catch (error) {
-      Fluttertoast.showToast(
-        msg: error.toString(),
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.grey,
-        fontSize: 15,
-      );
-    }
-
-    return imageUrl;
-  }
-
-  Padding buildAddPhotos() {
-    Size size = MediaQuery.of(context).size;
-    return Padding(
-      padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
-      child: image == null
-          ? DottedBorder(
-              color: Colors.black,
-              strokeWidth: 2,
-              dashPattern: const [8, 4],
-              child: InkWell(
-                  onTap: getImage,
-                  child: Container(
-                      height: 150,
-                      width: double.infinity,
-                      color: kPink.withAlpha(40),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Icon(
-                              size: 35,
-                              color: Colors.grey,
-                              Icons.camera_alt_outlined),
-                          Text('Add Photo'),
-                        ],
-                      ))),
-            )
-          : DottedBorder(
-              color: Colors.black,
-              strokeWidth: 2,
-              dashPattern: const [8, 4],
-              child: Center(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: size.height * 0.15,
-                      child: ListView.separated(
-                        separatorBuilder: (context, index) => const SizedBox(
-                          width: 5,
-                        ),
-                        physics: const ClampingScrollPhysics(),
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: listOfUrls.length,
-                        itemBuilder: (context, index) => SizedBox(
-                          width: size.width * 0.35,
-                          child: Stack(
-                            children: [
-                              AspectRatio(
-                                  aspectRatio: 1 / 1,
-                                  child: Image.network(
-                                    listOfUrls[index],
-                                    fit: BoxFit.cover,
-                                  )),
-                              IconButton(
-                                  onPressed: () {
-                                    try {
-                                      FirebaseStorage.instance
-                                          .refFromURL(listOfUrls[index])
-                                          .delete();
-                                    } catch (error) {
-                                      Fluttertoast.showToast(
-                                        msg: error.toString(),
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.BOTTOM,
-                                        timeInSecForIosWeb: 1,
-                                        backgroundColor: Colors.grey,
-                                        fontSize: 15,
-                                      );
-                                    }
-                                    setState(() {
-                                      listOfUrls.removeAt(index);
-                                    });
-                                  },
-                                  icon: const Icon(Icons.clear)),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
-                        onPressed: getImage,
-                        style:
-                            ElevatedButton.styleFrom(backgroundColor: Colors.black),
-                        child: const Text(
-                          "Add More Photos",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    if (isUploading)
-                      Center(
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                              Theme.of(context).primaryColor),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ),
-    );
-  }
-
   Divider buildDivider() {
     return Divider(
       thickness: 1,
@@ -422,6 +244,7 @@ class _AddProductPageState extends State<AddProductPage> {
           ),
           Expanded(
             child: TextFormField(
+              initialValue: widget.productData["productName"],
               decoration: InputDecoration(
                 hintStyle: TextStyle(
                     color: Colors.black.withOpacity(0.6),
@@ -472,6 +295,7 @@ class _AddProductPageState extends State<AddProductPage> {
           ),
           Expanded(
             child: TextFormField(
+              initialValue: widget.productData["productDescription"],
               keyboardType: TextInputType.multiline,
               maxLines: null,
               decoration: InputDecoration(
@@ -504,7 +328,6 @@ class _AddProductPageState extends State<AddProductPage> {
       ),
     );
   }
-
   Padding buildProductPrice() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
@@ -524,6 +347,7 @@ class _AddProductPageState extends State<AddProductPage> {
           ),
           Expanded(
             child: TextFormField(
+              initialValue: widget.productData["productPrice"].toString(),
               decoration: InputDecoration(
                 hintStyle: TextStyle(
                     color: Colors.black.withOpacity(0.6),
@@ -546,14 +370,13 @@ class _AddProductPageState extends State<AddProductPage> {
                 }
               },
               onSaved: (value) => setState(
-                  () => productModel.productPrice = int.parse(value!)),
+                      () => productModel.productPrice = int.parse(value!)),
             ),
           ),
         ],
       ),
     );
   }
-
   Padding buildProductWeight() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
@@ -573,6 +396,7 @@ class _AddProductPageState extends State<AddProductPage> {
           ),
           Expanded(
             child: TextFormField(
+              initialValue: widget.productData["productSize"],
               decoration: InputDecoration(
                 hintStyle: TextStyle(
                     color: Colors.black.withOpacity(0.6),
@@ -603,7 +427,6 @@ class _AddProductPageState extends State<AddProductPage> {
       ),
     );
   }
-
   Padding buildProductDelivery() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
@@ -623,6 +446,7 @@ class _AddProductPageState extends State<AddProductPage> {
           ),
           Expanded(
             child: TextFormField(
+              initialValue: widget.productData["productDelivery"].toString(),
               decoration: InputDecoration(
                 hintStyle: TextStyle(
                     color: Colors.black.withOpacity(0.6),
@@ -645,13 +469,14 @@ class _AddProductPageState extends State<AddProductPage> {
                 }
               },
               onSaved: (value) => setState(
-                  () => productModel.productDelivery = int.parse(value!)),
+                      () => productModel.productDelivery = int.parse(value!)),
             ),
           ),
         ],
       ),
     );
   }
+
   Padding buildProductVariation() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -672,32 +497,32 @@ class _AddProductPageState extends State<AddProductPage> {
                 width: 18,
               ),
               Expanded(
-                child:Padding(
-                  padding: const EdgeInsets.only(top: 3),
-                  child: DropdownButton<String>(
-                    underline: Container(
-                      height: 1,
-                      color: Colors.white,
-                    ),
-                    value: category,
-                      items: [
-                        DropdownMenuItem(
+                  child:Padding(
+                    padding: const EdgeInsets.only(top: 3),
+                    child: DropdownButton<String>(
+                        underline: Container(
+                          height: 1,
+                          color: Colors.white,
+                        ),
+                        value: category,
+                        items: [
+                          DropdownMenuItem(
                             child: Text("Whey Protein"),
-                          value: "Whey Protein",
-                        ),
-                        DropdownMenuItem(
-                          child: Text("Amino Acids"),
-                          value: "Amino",
-                        ),
-                      ],
-                      onChanged: (val){
-                      setState(() {
-                        category = val!;
-                        print(category);
-                      });
-                      }
-                  ),
-                )
+                            value: "Whey Protein",
+                          ),
+                          DropdownMenuItem(
+                            child: Text("Amino Acids"),
+                            value: "Amino",
+                          ),
+                        ],
+                        onChanged: (val){
+                          setState(() {
+                            category = val!;
+                            print(category);
+                          });
+                        }
+                    ),
+                  )
               ),
               const SizedBox(
                 width: 18,
@@ -705,6 +530,7 @@ class _AddProductPageState extends State<AddProductPage> {
               Expanded(
                 child: TextFormField(
                   // controller: controller,
+                  initialValue: widget.productData["availableQuantity"].toString(),
                   decoration: InputDecoration(
                     hintStyle: TextStyle(
                         color: Colors.black.withOpacity(0.6),
@@ -737,5 +563,4 @@ class _AddProductPageState extends State<AddProductPage> {
       ),
     );
   }
-
 }

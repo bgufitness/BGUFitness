@@ -42,23 +42,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
   }
   @override
   Widget build(BuildContext context) {
-    double rate = 0.0;
-    var prov = Provider.of<ProductProvider>(context);
     Size size = MediaQuery.of(context).size;
-
-    // final Stream<QuerySnapshot> usersStream = FirebaseFirestore.instance
-    //     .collection('Products')
-    //     .where('isPrivate', isEqualTo: false)
-    //     .snapshots();
-
-    // final Stream<QuerySnapshot> jewleryStream = FirebaseFirestore.instance
-    //     .collection('Jewelerys')
-    //     .where('isPrivate', isEqualTo: false)
-    //     .snapshots();
-    // final Stream<QuerySnapshot> DressStream = FirebaseFirestore.instance
-    //     .collection('Dresses')
-    //     .where('isPrivate', isEqualTo: false)
-    //     .snapshots();
 
     return Scaffold(
       appBar: AppBar(

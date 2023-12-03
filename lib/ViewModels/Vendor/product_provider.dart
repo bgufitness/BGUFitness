@@ -201,4 +201,38 @@ deleteNutritionist(String nutritionistId) async {
     onError: (e) => print("Error updating document $e"),
   );
 }
+void updateProductData({
+  required String productId,
+  required String productLocation,
+  required String productName,
+  required int productPrice,
+  required String productDescription,
+  required String productNumber,
+  required int productQuantity,
+  required String productSize,
+  required String productCategory,
+  required int productDelivery,
+  required bool isPrivate,
+}) async {
+  await FirebaseFirestore.instance
+      .collection("Products")
+      .where("productId", isEqualTo: productId)
+      .get()
+      .then((querySnapshot) {
+    querySnapshot.docs.forEach((doc) {
+      doc.reference.update({
+        "productAddress": productLocation,
+        "productName": productName,
+        "productPrice": productPrice,
+        "productDescription": productDescription,
+        "sellerNumber": productNumber,
+        "isPrivate": isPrivate,
+        "availableQuantity": productQuantity,
+        "productSize": productSize,
+        "productCategory": productCategory,
+        "productDelivery": productDelivery,
+      });
+    });
+  });
+}
 

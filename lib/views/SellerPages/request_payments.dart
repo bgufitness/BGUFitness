@@ -53,7 +53,7 @@ class _RequestPaymentsState extends State<RequestPayments> {
 
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return CircularProgressIndicator();
+                          return Center(child: CircularProgressIndicator());
                         }
                         // print(snapshot.data!.docs.length);
 

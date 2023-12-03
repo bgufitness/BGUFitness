@@ -181,7 +181,8 @@ class ProductProvider with ChangeNotifier {
         String phone = '',
         String postalcode = '',
         var price ,
-        var orderList
+        var orderList,
+        var vendor
       }) async {
     await FirebaseFirestore.instance.collection('orders').doc().set({
       'order_id': Random().nextInt(10000000),
@@ -201,7 +202,7 @@ class ProductProvider with ChangeNotifier {
       'order_cancelled': false,
       'total_amount': price,
       'orderlist': orderList,
-      'vendors': vendors
+      'vendors': vendor
     });
   }
   getAllOrders() {

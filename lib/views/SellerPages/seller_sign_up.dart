@@ -145,7 +145,7 @@ class _VendorSignupPageState extends State<VendorSignupPage> {
     keyboardType: TextInputType.number,
     decoration: kTextFieldDecoration.copyWith(
         prefixIcon: Icon(Icons.phone),
-        hintText: "Enter your Phone Number", labelText: "Number"),
+        hintText: "03xxxxxxxx", labelText: "Number"),
     validator: (value) {
       if (value!.isEmpty || !RegExp(r'^\d{11}$').hasMatch(value)) {
         return "Please Enter Correct Phone Number";
@@ -267,7 +267,7 @@ class _VendorSignupPageState extends State<VendorSignupPage> {
           hintText: "Enter your Password", labelText: "Password"),
       validator: (value) {
         if (value!.isEmpty ||
-            !RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#&*~]).{8,}$')
+            !RegExp(r'^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#&*~]).{8,}$')
                 .hasMatch(value)) {
           return "Please Enter Correct Password ";
         } else {

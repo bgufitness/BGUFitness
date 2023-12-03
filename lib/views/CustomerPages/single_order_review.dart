@@ -136,6 +136,7 @@ class _SingleOrderReviewState extends State<SingleOrderReview> {
                         'totalAmount': widget.order.deliveryCharges + (widget.order.ProductPrice * widget.order.ProductQuantity),
                       }
                   );
+                  var vendor = [widget.order.sellerId];
                   Provider.of<ProductProvider>(context, listen: false)
                       .placeSingleOrder(
                       address: widget.paddress,
@@ -144,7 +145,8 @@ class _SingleOrderReviewState extends State<SingleOrderReview> {
                       postalcode: widget.ppostalcode,
                       phone: widget.pphone,
                       price: widget.order.deliveryCharges + (widget.order.ProductPrice * widget.order.ProductQuantity),
-                      orderList: orderList
+                      orderList: orderList,
+                      vendor: vendor
                   );
 
                   showAlert();

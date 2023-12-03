@@ -19,7 +19,6 @@ import '../../constants.dart';
 import '../../custom_app_bar.dart';
 import '../../providerclass.dart';
 import '../Messenger Screens/chat_screen.dart';
-import 'OrderDeliveryInfo.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final imageUrlList;
@@ -346,16 +345,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       padding: const EdgeInsets.only(bottom: 10.0, right: 10),
                       child: InkWell(
                         onTap: () {
-                          // Provider.of<ProductProvider>(context, listen: false)
-                          //     .addToCart(
-                          //     widget.title,
-                          //     widget.price,
-                          //     widget.imageUrlList[0],
-                          //     quantity,
-                          //     widget.deliveryCharges,
-                          //     widget.sellerUID,
-                          //     FirebaseAuth.instance.currentUser!.uid,
-                          //     widget.category);
                           var item = ProductOrder(
                             ProductName: widget.title,
                             ProductPrice: widget.price,

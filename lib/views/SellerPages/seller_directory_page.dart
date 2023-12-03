@@ -1,6 +1,7 @@
 import 'package:bgmfitness/ViewModels/Vendor/nutritionist_provider.dart';
 import 'package:bgmfitness/views/SellerPages/edit_gym_page.dart';
 import 'package:bgmfitness/views/SellerPages/edit_nutritionist_page.dart';
+import 'package:bgmfitness/views/SellerPages/edit_product_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -321,13 +322,13 @@ class _SellerDirectoryPageState extends State<SellerDirectoryPage> {
                                   icon: const Icon(Icons.delete)),
                               IconButton(
                                   onPressed: () {
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) =>
-                                    //     EditNutritionistPage(nutritionistData: data,)
-                                    //   ),
-                                    // );
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                        ProductEditPage(productData: data)
+                                      ),
+                                    );
                                   },
                                   icon: const Icon(Icons.edit)),
                             ],

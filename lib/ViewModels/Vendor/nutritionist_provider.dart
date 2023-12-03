@@ -39,5 +39,38 @@ class NutritionistProvider {
       "nutritionistsEmail": FirebaseAuth.instance.currentUser!.email,
     });
   }
+  void updateNutritionistData({
+    required String nutritionistId,
+    required String nutritionistLocation,
+    required String nutritionistName,
+    required String nutritionistDescription,
+    required String nutritionistAddress,
+    required String nutritionistNumber,
+    required List inActiveDates,
+    required int startingPrice,
+    required Map<String, int> packages,
+  }) async {
+
+    await FirebaseFirestore.instance
+        .collection("Nutritionists")
+        .where("nutritionistsId", isEqualTo: nutritionistId)
+        .get()
+        .then((querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        doc.reference.update({
+          "nutritionistsAddress": nutritionistAddress,
+          "nutritionistsName": nutritionistName,
+          "nutritionistsPackages": packages,
+          "nutritionistsDescription": nutritionistDescription,
+          "nutritionistsNumber": nutritionistNumber,
+          "inActiveDates": inActiveDates,
+          "startingPrice": startingPrice,
+          "nutritionistsPackages": packages,
+          "nutritionistsEmail": FirebaseAuth.instance.currentUser!.email,
+        });
+      });
+    });
+
+  }
 }
 

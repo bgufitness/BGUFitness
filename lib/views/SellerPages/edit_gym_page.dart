@@ -80,18 +80,6 @@ class _EditGymPageState extends State<EditGymPage> {
           key: formKey,
           child: Column(
             children: [
-              SwitchListTile(
-                  title: const Text(
-                    'Make Private',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  value: isPrivate,
-                  onChanged: (value) {
-                    setState(() {
-                      isPrivate = value;
-                    });
-                  }),
-              buildDivider(),
               buildLocation(),
               buildDivider(),
               buildGymName(),
@@ -436,18 +424,17 @@ class _EditGymPageState extends State<EditGymPage> {
                   packagesMap.isNotEmpty) {
                 formKey.currentState!.save();
                 try {
-                  GymProvider().addGymData(
-                    gymImages: listOfUrls,
-                    gymLocation: gymLocation,
-                    gymName: gymModel.gymName,
-                    gymDescription: gymModel.gymDescription,
-                    gymAddress: gymModel.gymAddress,
-                    gymRating: 0,
-                    gymFeedback: 0,
-                    gymNumber: gymModel.gymNumber,
-                    startingPrice: packagesMap.entries.first.value,
-                    packages: packagesMap,
-                  ); // default value change later
+                  GymProvider().updateGymData(
+                      gymId: widget.gymData["gymId"],
+                      gymLocation: gymLocation,
+                      gymName: gymModel.gymName,
+                      gymDescription: gymModel.gymDescription,
+                      gymAddress: gymModel.gymAddress,
+                      gymNumber: gymModel.gymNumber,
+                      startingPrice: packagesMap.entries.first.value,
+                      packages: packagesMap,
+                  );
+                 // default value change later
                   Navigator.pushNamedAndRemoveUntil(
                       context, 'StreamPage', (route) => false);
                 } catch (error) {
