@@ -4,7 +4,6 @@ import 'package:bgmfitness/ViewModels/Vendor/gym_provider.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
