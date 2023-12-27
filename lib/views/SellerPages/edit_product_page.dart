@@ -313,8 +313,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
                 ),
               ),
               validator: (value) {
-                if (value!.isEmpty ||
-                    !RegExp(r"^[a-zA-Z0-9\s.,#\-]+$").hasMatch(value)) {
+                if (value!.isEmpty) {
                   return "Enter Description";
                 } else {
                   return null;

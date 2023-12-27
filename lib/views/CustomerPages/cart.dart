@@ -19,8 +19,7 @@ class ReviewCart extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.white,
       ),
-      body: Container(
-
+      body: Provider.of<ProductProvider>(context).cartList.isEmpty ? Center(child: Text("Cart is empty"),): Container(
         height: double.infinity,
         width: double.infinity,
         child:  Column(

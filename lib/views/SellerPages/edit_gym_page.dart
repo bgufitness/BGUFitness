@@ -60,7 +60,7 @@ class _EditGymPageState extends State<EditGymPage> {
     'Larkana'
   ];
 
-  String gymLocation = 'Location';
+  String gymLocation = '';
   GymModel gymModel = GymModel();
   final formKey = GlobalKey<FormState>();
 
@@ -69,7 +69,14 @@ class _EditGymPageState extends State<EditGymPage> {
   final imagePicker = ImagePicker();
   bool isUploading = false;
   late bool isPrivate = widget.gymData["isPrivate"];
-
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    gymLocation = widget.gymData['gymLocation'];
+    var temp = widget.gymData['gymPackages'] as Map<String, dynamic>;
+    packagesMap = Map<String, int>.from(temp);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -257,7 +264,9 @@ class _EditGymPageState extends State<EditGymPage> {
                                               menuFormKey.currentState!.save();
 
                                               setModalState(() {
+                                                print(packagesMap.length);
                                                 packagesMap[menu] = cost;
+                                                print(packagesMap.length);
                                               });
                                               menuDesController.clear();
                                               menuCostController.clear();
@@ -369,7 +378,7 @@ class _EditGymPageState extends State<EditGymPage> {
               );
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
-            child: const Text("Add Packages",
+            child: const Text("Edit Packages",
                 style: TextStyle(color: Colors.white)),
           ),
         ],
@@ -387,16 +396,6 @@ class _EditGymPageState extends State<EditGymPage> {
         children: [
           ElevatedButton(
             onPressed: () {
-              if (listOfUrls.isEmpty) {
-                Fluttertoast.showToast(
-                  msg: 'Please add images!',
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
-                  timeInSecForIosWeb: 1,
-                  backgroundColor: Colors.grey.shade900,
-                  fontSize: 15,
-                );
-              }
               if (gymLocation == 'Location') {
                 Fluttertoast.showToast(
                   msg: 'Please select location!',
@@ -419,7 +418,6 @@ class _EditGymPageState extends State<EditGymPage> {
               }
               if (formKey.currentState!.validate() &&
                   gymLocation != 'Location' &&
-                  listOfUrls.isNotEmpty &&
                   packagesMap.isNotEmpty) {
                 formKey.currentState!.save();
                 try {
@@ -546,7 +544,7 @@ class _EditGymPageState extends State<EditGymPage> {
           ),
           Expanded(
             child: TextFormField(
-              initialValue: widget.gymData["gymDescription"],
+              initialValue: widget.gymData["gymAddress"],
               decoration: InputDecoration(
                 hintStyle: TextStyle(
                     color: Colors.black.withOpacity(0.5),

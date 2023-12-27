@@ -114,7 +114,7 @@ class _BookingHistoryState extends State<BookingHistory> {
                                       GymBookingDetailPage(
                                         bookingData: bookingData,
                                         email:"@jjbj",
-                                        vendorId: bookingData['nutritionistsUID'],
+                                        vendorId: bookingData['gymUID'],
                                       )));
                         },
                         leading: AspectRatio(
