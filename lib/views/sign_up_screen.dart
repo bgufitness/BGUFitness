@@ -225,7 +225,7 @@ class _SignupPageState extends State<SignupPage> {
           hintText: "Enter your Password", labelText: "Password"),
       validator: (value) {
         if (value!.isEmpty ||
-            !RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#&*~]).{8,}$')
+            !RegExp(r'^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#&*~]).{8,}$')
                 .hasMatch(value)) {
           return "Please Enter Correct Password ";
         } else {
