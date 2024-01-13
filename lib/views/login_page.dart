@@ -190,7 +190,10 @@ class _LoginPageState extends State<LoginPage> {
         if (value!.isEmpty ||
             !RegExp(r'^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#&*~]).{8,}$')
                 .hasMatch(value)) {
-          return "Please Enter Correct Password ";
+          return "Password must have "
+              "\nlower case letters"
+              "\nat least one digit"
+              "\nat least one Special character";
         } else {
           return null;
         }
